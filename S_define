@@ -1,0 +1,26 @@
+/*
+ * [TRICK_HEADER]
+ * PURPOSE:
+ *     (JEOD docking simulation with Unity visualization interface)
+ *
+ * [LIBRARY DEPENDENCY:
+ *     (
+ *         (unity_interface/unity_interface.cpp)
+ *     )
+ * ]
+ */
+
+#define DYNAMICS 0.01
+
+#include "sim_objects/default_trick_sys.sm"
+#include "jeod_sys.sm"
+#include "default_priority_settings.sm"
+
+#include "time_dyntime_only.sm"
+#include "dynamics.sm"
+#include "vehicle_basic.sm"
+##include "unity_interface/include/unity_interface.hh"
+
+IntegLoop sim_integ_loop(DYNAMICS) dynamics;
+
+Trick::UnityInterface unity_interface;

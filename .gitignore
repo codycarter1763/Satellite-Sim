@@ -1,0 +1,9 @@
+build/
+*.o
+*.d
+*.so
+*.exe
+.trick/
+S_source.*
+S_sie.*
+de4xx_lib/

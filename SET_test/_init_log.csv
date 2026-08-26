@@ -1,0 +1,24 @@
+class,job,duration (s)
+default_data,trick_mc.mc.process_sim_args,1e-06
+default_data,trick_cpr.cpr.find_write_checkpoint_jobs,3e-06
+default_data,trick_sie.sie.process_sim_args,1e-06
+default_data,trick_real_time.rt_sync.get_sim_start_time,1e-06
+default_data,trick_inject.create_injector_executors,2.5e-05
+default_data,jeod_sys.jeod_sim_interface.set_mode,1e-06
+default_data,trick_sys.sched.get_freeze_job,1e-06
+default_data,trick_message.mpublisher.subscribe,0
+default_data,trick_message.mpublisher.subscribe,0
+default_data,trick_message.mpublisher.subscribe,0
+default_data,trick_message.mpublisher.subscribe,0
+default_data,trick_message.mpublisher.subscribe,0
+default_data,trick_message.mdevice.default_data,1.9e-05
+default_data,trick_em.create_thread_process_event,1e-06
+default_data,trick_vs.vs.default_data,2.5e-05
+default_data,trick_frame_log.frame_log.default_data,0.000205
+default_data,jeod_time.time_converter_tai_utc_default_data.initialize,9.2e-05
+default_data,jeod_time.time_converter_tai_ut1_default_data.initialize,0.000563
+default_data,sim_integ_loop.integ_sched.rebuild_jobs,0.000271
+default_data,trick_udunits.udunits.read_default_xml,0.003791
+input_processor,trick_jit.jit.process_sim_args,1e-06
+input_processor,trick_jit.jit.init,0
+input_processor,trick_ip.ip.process_sim_args,1e-06
