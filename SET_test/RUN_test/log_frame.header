@@ -1,0 +1,6 @@
+log_frame byte_order is little_endian
+log_frame	double	     s	sys.exec.out.time
+log_frame	double	     s	trick_real_time.rt_sync.frame_time
+log_frame	double	     s	trick_real_time.rt_sync.frame_overrun
+log_frame	double	     s	JOB_data_record_group_frame_userjobs.data_record.0.00(end_of_frame)
+log_frame	double	     s	JOB_data_record_group.trickjobs.0.00(end_of_frame)

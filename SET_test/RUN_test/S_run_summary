@@ -2,20 +2,20 @@
 ===============================================================================
 General:
 
-Executable called = /home/cody/jeod/sims/SIM_Docking/S_main_Linux_11.4_x86_64.exe
+Executable called = /home/cody/NASA-Trick-Spacecraft-Docking-Simulation/S_main_Linux_11.4_x86_64.exe
 Input file = SET_test/RUN_test/input.py
-S_main build time = Wed Aug 26 01:32:54 2026
+S_main build time = Wed Aug 26 11:54:44 2026
 Trick version = 25.0.3-beta
 
 ===============================================================================
 Build time Environment:
 
 TRICK_CC = /usr/bin/gcc
-TRICK_CFLAGS = -Wall -I/home/cody/jeod/models -I/home/cody/jeod/sims/SIM_Docking
+TRICK_CFLAGS = -Wall -I/home/cody/jeod/models -I/home/cody/NASA-Trick-Spacecraft-Docking-Simulation
 TRICK_CONVERT_SWIG_FLAGS = 
 TRICK_CPFLAGS = 
 TRICK_CXX = /usr/bin/g++
-TRICK_CXXFLAGS = -Wall -I/home/cody/jeod/models -I/home/cody/jeod/sims/SIM_Docking
+TRICK_CXXFLAGS = -Wall -I/home/cody/jeod/models -I/home/cody/NASA-Trick-Spacecraft-Docking-Simulation
 TRICK_DEBUG = 0
 TRICK_EDITOR = 
 TRICK_EXEC_LINK_LIBS = -lpthread -L/usr/lib/python3.10/config-3.10-x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -lpython3.10 -lcrypt -ldl  -lm -lm  -lpython3.10 -lcrypt -ldl  -lm -lm    -ludunits2 -lrt -lm -ldl -L/home/cody/civetweb/lib -lcivetweb -lz

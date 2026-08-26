@@ -1,7 +1,6 @@
-JEOD_HOME ?= $(realpath $(CURDIR)/../../)
+JEOD_HOME ?= /home/cody/jeod
 
-# Generalized S_override.mk file
-# Sets trick compilation flags and builds ephemeris binary files
 include $(JEOD_HOME)/bin/jeod/generic_S_overrides.mk
+
 TRICK_CFLAGS += -g -I$(CURDIR)
 TRICK_CXXFLAGS += -g -I$(CURDIR)

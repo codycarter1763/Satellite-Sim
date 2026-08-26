@@ -3,6 +3,9 @@
 #---------------------------------------------
 #trick.sim_services.exec_set_trap_sigfpe(1)
 
+trick.var_server_set_enabled(1)
+
+exec(open("Modified_data/realtime.py").read())
 exec(compile(open("Log_data/log_state.py", "rb").read(),
              "Log_data/log_state.py", 'exec'))
 log_state(1.0)
@@ -26,15 +29,38 @@ exec(compile(open("Modified_data/vehicle_mass_props.py", "rb").read(),
 exec(compile(open("Modified_data/vehicle_state.py", "rb").read(),
              "Modified_data/vehicle_state.py", 'exec'))
 
-# Connect Unity interface to JEOD state
-unity_interface.position_source = \
-    vehicle.dyn_body.composite_body.state.trans.position
-
-unity_interface.velocity_source = \
-    vehicle.dyn_body.composite_body.state.trans.velocity
 
 dynamics.dyn_manager.add_body_action(vehicle.mass_init)
 dynamics.dyn_manager.add_body_action(vehicle.trans_init)
 dynamics.dyn_manager.add_body_action(vehicle.rot_init)
 
 trick.sim_services.exec_set_terminate_time(10.0)
+
+# Start Unity Variable Server bridge
+
+import os
+
+varServerPort = trick.var_server_get_port()
+
+bridge_path = os.path.join(
+    os.getcwd(),
+    "trick_unity_bridge.py"
+)
+
+if os.path.isfile(bridge_path):
+
+    bridge_cmd = (
+        f"python3 {bridge_path} "
+        f"{varServerPort} > unity_bridge.log 2>&1 &"
+    )
+
+    print(bridge_cmd)
+
+    os.system(bridge_cmd)
+
+else:
+
+    print(
+        "Cannot find Unity bridge: "
+        + bridge_path
+    )

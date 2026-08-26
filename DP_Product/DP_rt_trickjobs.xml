@@ -26,12 +26,12 @@
             </curve>
         </plot>
         <plot grid="yes" background_color="cornsilk3">
-            <title>JOB_sim_integ_loop.integ_sched.integrate.26.03(integ_loop_0.010)</title>
+            <title>JOB_sim_integ_loop.integ_sched.integrate.25.03(integ_loop_0.010)</title>
             <xaxis> <label>Time</label> <units>s</units> </xaxis>
             <yaxis> <label>Execution Time</label> </yaxis>
             <curve>
                 <var>sys.exec.out.time</var>
-                <var line_color="darkgreen">JOB_sim_integ_loop.integ_sched.integrate.26.03(integ_loop_0.010)</var>
+                <var line_color="darkgreen">JOB_sim_integ_loop.integ_sched.integrate.25.03(integ_loop_0.010)</var>
             </curve>
         </plot>
         <plot grid="yes" background_color="cornsilk3">
@@ -83,12 +83,12 @@
             </curve>
         </plot>
         <plot grid="yes" background_color="cornsilk3">
-            <title>JOB_trick_injector_executor_0.rtie.Exec.27.00(top_of_frame)</title>
+            <title>JOB_trick_injector_executor_0.rtie.Exec.26.00(top_of_frame)</title>
             <xaxis> <label>Time</label> <units>s</units> </xaxis>
             <yaxis> <label>Execution Time</label> </yaxis>
             <curve>
                 <var>sys.exec.out.time</var>
-                <var line_color="darkgreen">JOB_trick_injector_executor_0.rtie.Exec.27.00(top_of_frame)</var>
+                <var line_color="darkgreen">JOB_trick_injector_executor_0.rtie.Exec.26.00(top_of_frame)</var>
             </curve>
         </plot>
         <plot grid="yes" background_color="bisque2">

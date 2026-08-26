@@ -19,8 +19,5 @@
 #include "time_dyntime_only.sm"
 #include "dynamics.sm"
 #include "vehicle_basic.sm"
-##include "unity_interface/include/unity_interface.hh"
 
 IntegLoop sim_integ_loop(DYNAMICS) dynamics;
-
-Trick::UnityInterface unity_interface;
