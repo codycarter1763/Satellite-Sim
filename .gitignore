@@ -7,3 +7,59 @@ build/
 S_source.*
 S_sie.*
 de4xx_lib/
+
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Unity generated metadata/cache
+MemoryCaptures/
+Recordings/
+
+# IDE/editor files
+.vscode/
+.idea/
+.vs/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Unity generated solution/project files
+ExportedObj/
+.consulo/
+
+# Gradle
+.gradle/
+.gradle-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Crash reports
+sysinfo.txt
+
+# Build output
+*.apk
+*.aab
+*.unitypackage
+
+# Addressables generated data
+ServerData/
+
+# Visual Studio / Rider caches
+.vscode/
+.rider/
+
+# Plastic SCM
+.plastic/

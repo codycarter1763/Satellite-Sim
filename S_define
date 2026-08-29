@@ -1,23 +1,19 @@
-/*
- * [TRICK_HEADER]
- * PURPOSE:
- *     (JEOD docking simulation with Unity visualization interface)
- *
- * [LIBRARY DEPENDENCY:
- *     (
- *         (unity_interface/unity_interface.cpp)
- *     )
- * ]
- */
+//=============================================================================
+// Creates a basic simulation with 2 vehicles.
+//=============================================================================
 
 #define DYNAMICS 0.01
 
 #include "sim_objects/default_trick_sys.sm"
 #include "jeod_sys.sm"
 #include "default_priority_settings.sm"
-
 #include "time_dyntime_only.sm"
 #include "dynamics.sm"
 #include "vehicle_basic.sm"
 
+// First vehicle is provided by vehicle_basic.sm
+
+VehicleSimObject vehicle2(dynamics.dyn_manager);
+
+// Integration
 IntegLoop sim_integ_loop(DYNAMICS) dynamics;

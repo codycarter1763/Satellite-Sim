@@ -16,5 +16,5 @@ log_frame_trickjobs	double	     s	JOB_trick_real_time.rt_sync.rt_monitor.13.09(e
 log_frame_trickjobs	double	     s	JOB_trick_master_slave.master.end_of_frame_status_from_slave.15.06(end_of_frame)
 log_frame_trickjobs	double	     s	JOB_trick_master_slave.master.end_of_frame_status_to_slave.15.07(end_of_frame)
 log_frame_trickjobs	double	     s	JOB_trick_master_slave.slave.end_of_frame.15.08(end_of_frame)
-log_frame_trickjobs	double	     s	JOB_sim_integ_loop.integ_sched.integrate.25.03(integ_loop_0.010)
-log_frame_trickjobs	double	     s	JOB_trick_injector_executor_0.rtie.Exec.26.00(top_of_frame)
+log_frame_trickjobs	double	     s	JOB_sim_integ_loop.integ_sched.integrate.26.03(integ_loop_0.010)
+log_frame_trickjobs	double	     s	JOB_trick_injector_executor_0.rtie.Exec.27.00(top_of_frame)
