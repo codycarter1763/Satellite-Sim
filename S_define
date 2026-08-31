@@ -9,11 +9,9 @@
 #include "default_priority_settings.sm"
 #include "time_dyntime_only.sm"
 #include "dynamics.sm"
+#include "earth_basic.sm"
+#include "environment_sans_de405.sm"
 #include "vehicle_basic.sm"
-
-// First vehicle is provided by vehicle_basic.sm
-
-VehicleSimObject vehicle2(dynamics.dyn_manager);
 
 // Integration
 IntegLoop sim_integ_loop(DYNAMICS) dynamics;

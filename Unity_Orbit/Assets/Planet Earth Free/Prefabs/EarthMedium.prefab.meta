@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 2f6c5d6ec779606459f39a8773a9fb35
+labels:
+- Earth
+- Planet
+- Solar
+- Space
+- Scifi
+- Atmosphere
+timeCreated: 1454203577
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 23399
+  packageName: Planet Earth Free
+  packageVersion: 2.0
+  assetPath: Assets/Planet Earth Free/Prefabs/EarthMedium.prefab
+  uploadId: 100725

@@ -6,7 +6,7 @@
 def log_state(log_cycle, vehicle_name):
     recording_group_name = vehicle_name + "_state"
 
-    dr_group = trick.sim_services.DRBinary(recording_group_name)
+    dr_group = trick.sim_services.DRAscii(recording_group_name)
     dr_group.thisown = 0
     dr_group.set_cycle(log_cycle)
     dr_group.freq = trick.sim_services.DR_Always

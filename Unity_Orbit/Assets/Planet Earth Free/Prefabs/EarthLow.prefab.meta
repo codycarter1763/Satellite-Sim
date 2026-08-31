@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: f6f5203ed5ea2204d95508a9c981db2f
+labels:
+- Earth
+- Planet
+- Solar
+- Space
+- Scifi
+- Atmosphere
+timeCreated: 1454204093
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 23399
+  packageName: Planet Earth Free
+  packageVersion: 2.0
+  assetPath: Assets/Planet Earth Free/Prefabs/EarthLow.prefab
+  uploadId: 100725

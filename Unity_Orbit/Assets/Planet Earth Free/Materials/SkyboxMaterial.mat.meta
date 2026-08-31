@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f0742823962d31b4ebfa4be9309ddd4e
+timeCreated: 1454201664
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 23399
+  packageName: Planet Earth Free
+  packageVersion: 2.0
+  assetPath: Assets/Planet Earth Free/Materials/SkyboxMaterial.mat
+  uploadId: 100725
