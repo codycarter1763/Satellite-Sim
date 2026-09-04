@@ -1,0 +1,35 @@
+=============================================
+Unity Bridge Setup
+=============================================
+Current directory: /home/cody/NASA-Trick-Spacecraft-Docking-Simulation
+Variable Server port: 35697
+Bridge path: /home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py
+Bridge exists: True
+Starting Unity bridge:
+python3 -u /home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py 35697
+|L   0|2026/09/01,22:33:39.508022|cody-GS65-Stealth-9SD| |T 0|18000.000000| [00m
+     REALTIME SHUTDOWN STATS:
+            ACTUAL INIT TIME:        4.239
+         ACTUAL ELAPSED TIME:       37.388
+[00m|L   0|2026/09/01,22:33:40.429625|cody-GS65-Stealth-9SD| |T 0|18000.000000| [00m
+SIMULATION TERMINATED IN
+  PROCESS: 0
+  ROUTINE: Executive_loop_single_thread.cpp:98
+  DIAGNOSTIC: Reached termination time
+
+              SIMULATION START TIME:        0.000
+               SIMULATION STOP TIME:    18000.000
+            SIMULATION ELAPSED TIME:    18000.000
+                 USER CPU TIME USED:       36.493
+               SYSTEM CPU TIME USED:        0.732
+              SIMULATION / CPU TIME:      483.552
+       INITIALIZATION USER CPU TIME:        4.071
+     INITIALIZATION SYSTEM CPU TIME:        0.084
+               SIMULATION RAM USAGE:      125.527MB
+      (External program RAM usage not included!)
+  VOLUNTARY CONTEXT SWITCHES (INIT):           12
+INVOLUNTARY CONTEXT SWITCHES (INIT):         1002
+   VOLUNTARY CONTEXT SWITCHES (RUN):        21743
+ INVOLUNTARY CONTEXT SWITCHES (RUN):        16555
+
+[00m

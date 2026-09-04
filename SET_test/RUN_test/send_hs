@@ -1,28 +1,25 @@
-|L   1|2026/08/28,23:57:54.319711|cody-GS65-Stealth-9SD| |T 0|0.000000| Freeze ON. Simulation time holding at 0.000000 seconds.
-|L   1|2026/08/28,23:59:40.319713|cody-GS65-Stealth-9SD| |T 0|0.000000| Freeze OFF.
-|L   0|2026/08/28,23:59:50.377685|cody-GS65-Stealth-9SD| |T 0|10.000000| 
+|L   0|2026/09/04,00:03:29.954153|cody-GS65-Stealth-9SD| |T 0|18000.000000| 
      REALTIME SHUTDOWN STATS:
-     REALTIME TOTAL OVERRUNS:            0
-            ACTUAL INIT TIME:        1.587
-         ACTUAL ELAPSED TIME:      117.645
-|L   0|2026/08/28,23:59:50.425154|cody-GS65-Stealth-9SD| |T 0|10.000000| 
+            ACTUAL INIT TIME:        1.825
+         ACTUAL ELAPSED TIME:       20.445
+|L   0|2026/09/04,00:03:31.379168|cody-GS65-Stealth-9SD| |T 0|18000.000000| 
 SIMULATION TERMINATED IN
   PROCESS: 0
   ROUTINE: Executive_loop_single_thread.cpp:98
   DIAGNOSTIC: Reached termination time
 
               SIMULATION START TIME:        0.000
-               SIMULATION STOP TIME:       10.000
-            SIMULATION ELAPSED TIME:       10.000
-                 USER CPU TIME USED:        2.730
-               SYSTEM CPU TIME USED:        0.735
-              SIMULATION / CPU TIME:        2.887
-       INITIALIZATION USER CPU TIME:        1.537
+               SIMULATION STOP TIME:    18000.000
+            SIMULATION ELAPSED TIME:    18000.000
+                 USER CPU TIME USED:       20.887
+               SYSTEM CPU TIME USED:        0.481
+              SIMULATION / CPU TIME:      842.396
+       INITIALIZATION USER CPU TIME:        1.787
      INITIALIZATION SYSTEM CPU TIME:        0.041
-               SIMULATION RAM USAGE:      133.211MB
+               SIMULATION RAM USAGE:      123.516MB
       (External program RAM usage not included!)
-  VOLUNTARY CONTEXT SWITCHES (INIT):           10
-INVOLUNTARY CONTEXT SWITCHES (INIT):          196
-   VOLUNTARY CONTEXT SWITCHES (RUN):        31999
- INVOLUNTARY CONTEXT SWITCHES (RUN):           46
+  VOLUNTARY CONTEXT SWITCHES (INIT):            9
+INVOLUNTARY CONTEXT SWITCHES (INIT):            6
+   VOLUNTARY CONTEXT SWITCHES (RUN):        18219
+ INVOLUNTARY CONTEXT SWITCHES (RUN):          182
 

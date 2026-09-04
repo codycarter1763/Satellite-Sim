@@ -4,7 +4,7 @@
 #trick.sim_services.exec_set_trap_sigfpe(1)
 
 trick.var_server_set_enabled(1)
-exec(open("Modified_data/realtime.py").read())
+#exec(open("Modified_data/realtime.py").read())
 
 # Set Up Data Recording
 exec(compile(open("Log_data/log_state.py", "rb").read(),

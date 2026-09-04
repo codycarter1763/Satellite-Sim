@@ -1,4 +1,4 @@
-log_vehicle_state byte_order is little_endian
+log_vehicle_state is in ASCII
 log_vehicle_state	double	     s	sys.exec.out.time
 log_vehicle_state	double	     m	vehicle.dyn_body.composite_body.state.trans.position[0]
 log_vehicle_state	double	    --	vehicle.dyn_body.composite_body.state.rot.T_parent_this[0][0]

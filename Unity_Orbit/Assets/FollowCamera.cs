@@ -8,68 +8,55 @@ public class Follow_player : MonoBehaviour
     public float distance = 15f;
     public float height = 8f;
 
-    void LateUpdate()
+private Vector3 previousPosition;
+private bool hasPreviousPosition = false;
+private Vector3 lastValidTangent = Vector3.right; // any safe non-zero default
+
+void LateUpdate()
+{
+    if (player == null || earth == null)
+        return;
+
+    Vector3 radial = (player.position - earth.position).normalized;
+
+    if (!hasPreviousPosition)
     {
-        if (player == null || earth == null)
-            return;
-
-        // Direction from Earth to satellite
-        Vector3 radial =
-            (player.position - earth.position).normalized;
-
-        // Direction perpendicular to radial direction
-        // for the current X-Y orbital plane.
-        Vector3 tangent =
-            new Vector3(-radial.y, radial.x, 0f).normalized;
-
-        // ---------------------------------------------------------
-        // CAMERA POSITION
-        // ---------------------------------------------------------
-
-        Vector3 cameraPosition =
-            player.position
-            - tangent * distance
-            + Vector3.forward * height;
-
-        transform.position = cameraPosition;
-
-        // ---------------------------------------------------------
-        // CAMERA LOOK DIRECTION
-        // ---------------------------------------------------------
-
-        Vector3 lookDirection =
-            (player.position - cameraPosition).normalized;
-
-        // ---------------------------------------------------------
-        // KEEP EARTH AT THE BOTTOM OF THE SCREEN
-        // ---------------------------------------------------------
-
-        // Direction from satellite toward Earth
-        Vector3 earthDirection =
-            (earth.position - player.position).normalized;
-
-        // Remove the component pointing toward the satellite
-        // so we get Earth's direction across the camera plane.
-        Vector3 earthOnScreen =
-            Vector3.ProjectOnPlane(
-                earthDirection,
-                lookDirection
-            ).normalized;
-
-        // Camera "up" should point opposite Earth.
-        // Therefore Earth appears at the bottom.
-        Vector3 cameraUp =
-            -earthOnScreen;
-
-        // Apply rotation
-        if (lookDirection.sqrMagnitude > 0.001f &&
-            cameraUp.sqrMagnitude > 0.001f)
-        {
-            transform.rotation =
-                Quaternion.LookRotation(
-                    lookDirection,
-                    cameraUp
-                );
-        }
+        previousPosition = player.position;
+        hasPreviousPosition = true;
+        return;
     }
+
+    Vector3 delta = player.position - previousPosition;
+
+    // Only recompute direction when the satellite actually moved
+    // this frame (i.e. a new telemetry packet arrived). Otherwise
+    // keep using the last known-good tangent instead of collapsing
+    // to a zero vector.
+    if (delta.sqrMagnitude > 0.0001f)
+    {
+        Vector3 velocityDir = delta.normalized;
+        lastValidTangent = Vector3.ProjectOnPlane(velocityDir, radial).normalized;
+        previousPosition = player.position;
+    }
+
+    Vector3 tangent = lastValidTangent;
+
+    Vector3 cameraPosition =
+        player.position
+        - tangent * distance
+        + radial * height;
+
+    transform.position = cameraPosition;
+
+    Vector3 lookDirection = (player.position - cameraPosition).normalized;
+
+    Vector3 earthDirection = (earth.position - player.position).normalized;
+    Vector3 earthOnScreen = Vector3.ProjectOnPlane(earthDirection, lookDirection).normalized;
+    Vector3 cameraUp = -earthOnScreen;
+
+    if (lookDirection.sqrMagnitude > 0.001f && cameraUp.sqrMagnitude > 0.001f)
+    {
+        transform.rotation = Quaternion.LookRotation(lookDirection, cameraUp);
+    }
+}
 }

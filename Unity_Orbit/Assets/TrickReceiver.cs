@@ -12,15 +12,13 @@ public class TrickReceiver : MonoBehaviour
     [Header("Object")]
     [SerializeField] private Transform vehicle;
 
+    [Header("Ground Track")]
+    [SerializeField] private GroundTrack groundTrack;
+
     [Header("Simulation Scale")]
-    // 1 Unity unit = 1,000,000 meters
-    // Earth radius:
-    // 6,371,000 m * 0.000001 = 6.371 Unity units
     [SerializeField] private float metersToUnity = 0.000001f;
 
     [Header("Coordinate System")]
-    // Initial JEOD Earth.inertial -> Unity mapping.
-    // We can adjust this later if the orbit is rotated incorrectly.
     [SerializeField] private bool swapYZ = false;
     [SerializeField] private bool invertX = false;
     [SerializeField] private bool invertY = false;
@@ -30,22 +28,8 @@ public class TrickReceiver : MonoBehaviour
     [SerializeField] private float positionSmooth = 20f;
     [SerializeField] private float rotationSmooth = 20f;
 
-    // =========================================================
-    // Packet format
-    //
-    // 7 doubles = 7 * 8 = 56 bytes
-    //
-    // Bytes:
-    //   0  - 7   Position X
-    //   8  - 15  Position Y
-    //   16 - 23  Position Z
-    //   24 - 31  Quaternion W
-    //   32 - 39  Quaternion X
-    //   40 - 47  Quaternion Y
-    //   48 - 55  Quaternion Z
-    // =========================================================
-
-    private const int PACKET_SIZE = 56;
+    // 11 doubles = 88 bytes
+    private const int PACKET_SIZE = 88;
 
     private UdpClient udp;
     private Thread receiveThread;
@@ -53,19 +37,14 @@ public class TrickReceiver : MonoBehaviour
 
     private readonly object stateLock = new object();
 
-    // =========================================================
-    // Current received state
-    // =========================================================
-
     private Vector3 vehiclePosition;
     private Quaternion vehicleRotation;
 
-    private bool hasData;
-    private float debugTimer = 0f;
+    private double latitude;
+    private double longitude;
+    private double altitude;
 
-    // =========================================================
-    // Start
-    // =========================================================
+    private bool hasData;
 
     void Start()
     {
@@ -82,10 +61,6 @@ public class TrickReceiver : MonoBehaviour
             Debug.Log(
                 $"Listening for Trick data on UDP port {port}"
             );
-
-            Debug.Log(
-                $"Simulation scale: {metersToUnity} Unity units/meter"
-            );
         }
         catch (Exception e)
         {
@@ -94,11 +69,6 @@ public class TrickReceiver : MonoBehaviour
             );
         }
     }
-
-
-    // =========================================================
-    // Receive UDP data
-    // =========================================================
 
     void ReceiveData()
     {
@@ -115,11 +85,6 @@ public class TrickReceiver : MonoBehaviour
                 byte[] data =
                     udp.Receive(ref endpoint);
 
-
-                // -------------------------------------------------
-                // Validate packet size
-                // -------------------------------------------------
-
                 if (data.Length != PACKET_SIZE)
                 {
                     Debug.LogWarning(
@@ -130,40 +95,45 @@ public class TrickReceiver : MonoBehaviour
                     continue;
                 }
 
-
                 // =================================================
-                // Vehicle Position
+                // Packet
                 // =================================================
 
-                double vehicleX =
+                double simTime =
                     BitConverter.ToDouble(data, 0);
 
-                double vehicleY =
+                double vehicleX =
                     BitConverter.ToDouble(data, 8);
 
-                double vehicleZ =
+                double vehicleY =
                     BitConverter.ToDouble(data, 16);
 
-
-                // =================================================
-                // Vehicle Quaternion
-                // =================================================
-
-                double vehicleW =
+                double vehicleZ =
                     BitConverter.ToDouble(data, 24);
 
-                double vehicleQX =
+                double vehicleW =
                     BitConverter.ToDouble(data, 32);
 
-                double vehicleQY =
+                double vehicleQX =
                     BitConverter.ToDouble(data, 40);
 
-                double vehicleQZ =
+                double vehicleQY =
                     BitConverter.ToDouble(data, 48);
 
+                double vehicleQZ =
+                    BitConverter.ToDouble(data, 56);
+
+                double lat =
+                    BitConverter.ToDouble(data, 64);
+
+                double lon =
+                    BitConverter.ToDouble(data, 72);
+
+                double alt =
+                    BitConverter.ToDouble(data, 80);
 
                 // =================================================
-                // Convert JEOD meters -> Unity units
+                // Position
                 // =================================================
 
                 float x =
@@ -174,20 +144,6 @@ public class TrickReceiver : MonoBehaviour
 
                 float z =
                     (float)(vehicleZ * metersToUnity);
-
-
-                // =================================================
-                // Coordinate system conversion
-                //
-                // Initially this is:
-                //
-                // JEOD X -> Unity X
-                // JEOD Y -> Unity Y
-                // JEOD Z -> Unity Z
-                //
-                // The options below let us adjust the mapping
-                // without changing the rest of the receiver.
-                // =================================================
 
                 if (swapYZ)
                 {
@@ -205,7 +161,6 @@ public class TrickReceiver : MonoBehaviour
                 if (invertZ)
                     z = -z;
 
-
                 Vector3 newPosition =
                     new Vector3(
                         x,
@@ -213,9 +168,8 @@ public class TrickReceiver : MonoBehaviour
                         z
                     );
 
-
                 // =================================================
-                // Create Unity quaternion
+                // Quaternion
                 // =================================================
 
                 Quaternion newRotation =
@@ -226,16 +180,10 @@ public class TrickReceiver : MonoBehaviour
                         (float)vehicleW
                     );
 
-
-                // -------------------------------------------------
-                // Normalize quaternion
-                // -------------------------------------------------
-
                 newRotation.Normalize();
 
-
                 // =================================================
-                // Store received state
+                // Store
                 // =================================================
 
                 lock (stateLock)
@@ -243,86 +191,66 @@ public class TrickReceiver : MonoBehaviour
                     vehiclePosition = newPosition;
                     vehicleRotation = newRotation;
 
+                    latitude = lat;
+                    longitude = lon;
+                    altitude = alt;
+
                     hasData = true;
                 }
             }
             catch (SocketException)
             {
                 if (running)
-                {
-                    Debug.LogError(
-                        "UDP socket error."
-                    );
-                }
+                    Debug.LogError("UDP socket error.");
             }
             catch (Exception e)
             {
                 if (running)
-                {
                     Debug.LogError(
                         $"UDP receive error: {e.Message}"
                     );
-                }
             }
         }
     }
 
-
-    // =========================================================
-    // Unity frame update
-    // =========================================================
-
     void Update()
     {
-        debugTimer += Time.deltaTime;
-
-if (debugTimer >= 1.0f)
-{
-    debugTimer = 0f;
-
-    lock (stateLock)
-    {
-        if (hasData)
-        {
-            Debug.Log(
-                $"Satellite Position: " +
-                $"X={vehiclePosition.x:F6}, " +
-                $"Y={vehiclePosition.y:F6}, " +
-                $"Z={vehiclePosition.z:F6}"
-            );
-        }
-        else
-        {
-            Debug.Log("No Trick data received yet.");
-        }
-    }
-}
         Vector3 pos;
         Quaternion rot;
 
-
-        // ---------------------------------------------------------
-        // Copy latest received state
-        // ---------------------------------------------------------
+        double lat;
+        double lon;
+        double alt;
 
         lock (stateLock)
         {
             if (!hasData)
-            {
                 return;
-            }
 
             pos = vehiclePosition;
             rot = vehicleRotation;
+
+            lat = latitude;
+            lon = longitude;
+            alt = altitude;
         }
-        float distance = pos.magnitude;
 
-        Debug.Log($"Satellite distance from Unity origin: {distance}");
+        // =========================================================
+        // Update ground track
+        // =========================================================
 
+        if (groundTrack != null)
+        {
+            groundTrack.SetPosition(
+                (float)lat,
+                (float)lon,
+                (float)alt
+            );
+        }
 
-        // ---------------------------------------------------------
-        // Calculate frame-rate independent smoothing
-        // ---------------------------------------------------------
+        // =========================================================
+        // Smooth spacecraft
+        // =========================================================
 
         float positionT =
             1f - Mathf.Exp(
@@ -335,11 +263,6 @@ if (debugTimer >= 1.0f)
                 -rotationSmooth *
                 Time.deltaTime
             );
-
-
-        // =========================================================
-        // Vehicle
-        // =========================================================
 
         if (vehicle != null)
         {
@@ -359,11 +282,6 @@ if (debugTimer >= 1.0f)
         }
     }
 
-
-    // =========================================================
-    // Shutdown
-    // =========================================================
-
     void OnApplicationQuit()
     {
         running = false;
@@ -374,20 +292,20 @@ if (debugTimer >= 1.0f)
         }
         catch
         {
-            // Ignore shutdown errors.
         }
 
         try
         {
-            if (receiveThread != null &&
-                receiveThread.IsAlive)
+            if (
+                receiveThread != null &&
+                receiveThread.IsAlive
+            )
             {
                 receiveThread.Join(500);
             }
         }
         catch
         {
-            // Ignore shutdown errors.
         }
     }
 }

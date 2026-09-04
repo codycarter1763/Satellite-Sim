@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+import argparse
+import math
 import socket
+import struct
 import sys
 import time
-import struct
 
 
 # ============================================================
@@ -18,6 +20,22 @@ UNITY_PORT = 5005
 CYCLE_SEC = 0.10
 
 VEHICLE_NAME = "vehicle"
+
+# Earth rotation rate [rad/s]
+EARTH_ROTATION_RATE = 7.2921151467e-5
+
+# Earth mean radius [m]
+EARTH_RADIUS = 6_371_000.0
+
+# Initial Greenwich angle.
+#
+# This determines where longitude 0 is at simulation time = 0.
+# For a demo, zero is perfectly fine.
+INITIAL_EARTH_ROTATION = 0.0
+
+# Trick variable server broadcast channel
+TRICK_BROADCAST_ADDR = "224.3.14.15"
+TRICK_BROADCAST_PORT = 9265
 
 
 # ============================================================
@@ -37,34 +55,237 @@ TRICK_VARS = [
 
 
 # ============================================================
+# ECI -> Latitude / Longitude
+# ============================================================
+
+def eci_to_geodetic(x, y, z, sim_time):
+    """
+    Convert JEOD ECI position [m] to approximate
+    geocentric latitude/longitude/altitude.
+
+    Assumes the ECI frame's X axis corresponds to
+    Greenwich longitude at simulation time = 0.
+    """
+
+    theta = (
+        INITIAL_EARTH_ROTATION
+        + EARTH_ROTATION_RATE * sim_time
+    )
+
+    c = math.cos(theta)
+    s = math.sin(theta)
+
+    # ECI -> ECEF
+    x_ecef = c * x + s * y
+    y_ecef = -s * x + c * y
+    z_ecef = z
+
+    longitude = math.atan2(y_ecef, x_ecef)
+
+    horizontal = math.sqrt(
+        x_ecef * x_ecef +
+        y_ecef * y_ecef
+    )
+
+    latitude = math.atan2(
+        z_ecef,
+        horizontal
+    )
+
+    radius = math.sqrt(
+        x * x +
+        y * y +
+        z * z
+    )
+
+    altitude = radius - EARTH_RADIUS
+
+    latitude_deg = math.degrees(latitude)
+    longitude_deg = math.degrees(longitude)
+
+    # Normalize longitude to [-180, 180]
+    if longitude_deg > 180.0:
+        longitude_deg -= 360.0
+
+    if longitude_deg < -180.0:
+        longitude_deg += 360.0
+
+    return latitude_deg, longitude_deg, altitude
+
+
+# ============================================================
+# Variable server discovery
+# ============================================================
+
+def parse_broadcast_message(msg: str):
+
+    fields = msg.split("\t")
+
+    if len(fields) < 10:
+        raise ValueError(
+            f"Unexpected broadcast message format, "
+            f"got {len(fields)} fields"
+        )
+
+    return {
+        "hostname": fields[0],
+        "port": int(fields[1]),
+        "user": fields[2],
+        "pid": int(fields[3]) if fields[3].strip() else None,
+        "sim_dir": fields[4],
+        "s_main_name": fields[5],
+        "input_file": fields[6],
+        "trick_version": fields[7],
+        "user_tag": fields[8],
+    }
+
+
+def discover_trick_sim(match=None, timeout=30.0):
+
+    sock = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_DGRAM
+    )
+
+    sock.setsockopt(
+        socket.SOL_SOCKET,
+        socket.SO_REUSEADDR,
+        1
+    )
+
+    if hasattr(socket, "SO_REUSEPORT"):
+        try:
+            sock.setsockopt(
+                socket.SOL_SOCKET,
+                socket.SO_REUSEPORT,
+                1
+            )
+        except OSError:
+            pass
+
+    sock.bind(
+        ("", TRICK_BROADCAST_PORT)
+    )
+
+    mreq = struct.pack(
+        "4sl",
+        socket.inet_aton(TRICK_BROADCAST_ADDR),
+        socket.INADDR_ANY
+    )
+
+    sock.setsockopt(
+        socket.IPPROTO_IP,
+        socket.IP_ADD_MEMBERSHIP,
+        mreq
+    )
+
+    sock.settimeout(timeout)
+
+    print(
+        f"[bridge] Listening for Trick sim broadcasts "
+        f"on {TRICK_BROADCAST_ADDR}:{TRICK_BROADCAST_PORT}"
+    )
+
+    deadline = time.time() + timeout
+
+    while time.time() < deadline:
+
+        remaining = deadline - time.time()
+
+        sock.settimeout(
+            max(remaining, 0.1)
+        )
+
+        try:
+            raw, _addr = sock.recvfrom(2048)
+
+        except socket.timeout:
+            break
+
+        try:
+            info = parse_broadcast_message(
+                raw.decode(
+                    "utf-8",
+                    errors="replace"
+                )
+            )
+
+        except ValueError:
+            continue
+
+        print(
+            f"[bridge] Found sim: "
+            f"{info['sim_dir']} "
+            f"(input: {info['input_file']}, "
+            f"pid: {info['pid']}, "
+            f"host: {info['hostname']}:{info['port']})"
+        )
+
+        if match is None:
+            sock.close()
+            return (
+                info["hostname"],
+                info["port"]
+            )
+
+        haystack = (
+            f"{info['sim_dir']} "
+            f"{info['input_file']} "
+            f"{info['s_main_name']}"
+        )
+
+        if match in haystack:
+            sock.close()
+            return (
+                info["hostname"],
+                info["port"]
+            )
+
+    sock.close()
+
+    raise RuntimeError(
+        "No Trick simulation broadcasts seen."
+    )
+
+
+# ============================================================
 # Connect to Trick
 # ============================================================
 
-def connect_trick(port, retries=50, delay=0.2):
+def connect_trick(
+    host,
+    port,
+    retries=50,
+    delay=0.2
+):
 
     for attempt in range(retries):
 
         try:
 
             s = socket.create_connection(
-                (TRICK_HOST, port),
+                (host, port),
                 timeout=2
             )
 
             print(
-                f"[bridge] Connected to Trick variable server "
-                f"on port {port}"
+                f"[bridge] Connected to Trick "
+                f"variable server on "
+                f"{host}:{port}"
             )
 
             return s
 
-        except (ConnectionRefusedError, OSError):
+        except (
+            ConnectionRefusedError,
+            OSError
+        ):
 
             time.sleep(delay)
 
     raise RuntimeError(
-        f"[bridge] Could not connect to Trick variable server "
-        f"on port {port}"
+        f"Could not connect to Trick "
+        f"variable server on {host}:{port}"
     )
 
 
@@ -88,7 +309,8 @@ def trick_recv_line(sock, buf):
         if not chunk:
 
             raise ConnectionError(
-                "[bridge] Trick variable server closed connection"
+                "Trick variable server "
+                "closed connection"
             )
 
         buf += chunk
@@ -107,29 +329,76 @@ def trick_recv_line(sock, buf):
 
 def main():
 
-    if len(sys.argv) < 2:
+    parser = argparse.ArgumentParser()
 
-        print(
-            "Usage: trick_unity_bridge.py "
-            "<trick_var_server_port>"
+    parser.add_argument(
+        "port_positional",
+        nargs="?",
+        type=int,
+        default=None
+    )
+
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=None
+    )
+
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=None
+    )
+
+    parser.add_argument(
+        "--match",
+        type=str,
+        default=None
+    )
+
+    parser.add_argument(
+        "--discovery-timeout",
+        type=float,
+        default=30.0
+    )
+
+    args = parser.parse_args()
+
+    manual_port = (
+        args.port
+        if args.port is not None
+        else args.port_positional
+    )
+
+    if manual_port is not None:
+
+        trick_host = (
+            args.host or TRICK_HOST
         )
 
-        sys.exit(1)
+        trick_port = manual_port
 
+    else:
 
-    trick_port = int(sys.argv[1])
+        trick_host, trick_port = (
+            discover_trick_sim(
+                match=args.match,
+                timeout=args.discovery_timeout
+            )
+        )
 
-
-    # ========================================================
+    # --------------------------------------------------------
     # Connect to Trick
-    # ========================================================
+    # --------------------------------------------------------
 
-    trick_sock = connect_trick(trick_port)
+    trick_sock = connect_trick(
+        trick_host,
+        trick_port
+    )
 
-
-    # ========================================================
-    # Create UDP socket for Unity
-    # ========================================================
+    # --------------------------------------------------------
+    # Unity UDP socket
+    # --------------------------------------------------------
 
     unity_sock = socket.socket(
         socket.AF_INET,
@@ -141,26 +410,24 @@ def main():
         f"{UNITY_HOST}:{UNITY_PORT}"
     )
 
+    # --------------------------------------------------------
+    # Subscribe
+    # --------------------------------------------------------
 
-    # ========================================================
-    # Subscribe to Trick variables
-    # ========================================================
-
-    print("[bridge] Subscribing to variables...")
+    print(
+        "[bridge] Subscribing to variables..."
+    )
 
     for var in TRICK_VARS:
 
-        print(f"[bridge]   {var}")
+        print(
+            f"[bridge]   {var}"
+        )
 
         trick_send(
             trick_sock,
             f'trick.var_add("{var}")'
         )
-
-
-    # ========================================================
-    # Configure Trick variable server
-    # ========================================================
 
     trick_send(
         trick_sock,
@@ -172,10 +439,9 @@ def main():
         "trick.var_send()"
     )
 
-
-    # ========================================================
-    # Receive data
-    # ========================================================
+    # --------------------------------------------------------
+    # Receive
+    # --------------------------------------------------------
 
     buf = b""
 
@@ -192,25 +458,22 @@ def main():
     while True:
 
         try:
+
             line, buf = trick_recv_line(
                 trick_sock,
                 buf
             )
 
         except ConnectionError as e:
+
             print(e)
             break
-
-
-        # ====================================================
-        # Show first raw Trick message
-        # ====================================================
 
         if not first_line_shown:
 
             print()
             print(
-                "================================================"
+                "=========================================="
             )
 
             print(
@@ -220,17 +483,16 @@ def main():
             print(line)
 
             print(
-                "================================================"
+                "=========================================="
             )
 
             print()
 
             first_line_shown = True
 
-
-        # ====================================================
-        # Parse Trick data
-        # ====================================================
+        # ----------------------------------------------------
+        # Parse
+        # ----------------------------------------------------
 
         parts = line.split()
 
@@ -245,47 +507,92 @@ def main():
             ]
 
         except ValueError:
+
             continue
 
-
-        # ====================================================
-        # Extract position
-        # ====================================================
+        # ----------------------------------------------------
+        # Position
+        # ----------------------------------------------------
 
         px = values[0]
         py = values[1]
         pz = values[2]
 
-
-        # ====================================================
-        # Extract quaternion
-        # ====================================================
+        # ----------------------------------------------------
+        # Quaternion
+        # ----------------------------------------------------
 
         qw = values[3]
         qx = values[4]
         qy = values[5]
         qz = values[6]
 
+        # ----------------------------------------------------
+        # Simulation time
+        #
+        # Trick sends the simulation time as the first
+        # field in the variable-server response.
+        # ----------------------------------------------------
 
-        # ====================================================
-        # Create binary packet
-        # ====================================================
+        try:
+
+            sim_time = float(parts[0])
+
+        except ValueError:
+
+            continue
+
+        # ----------------------------------------------------
+        # ECI -> geographic coordinates
+        # ----------------------------------------------------
+
+        latitude, longitude, altitude = (
+            eci_to_geodetic(
+                px,
+                py,
+                pz,
+                sim_time
+            )
+        )
+
+        # ----------------------------------------------------
+        # Packet
+        #
+        # 11 doubles:
+        #
+        # 0  simulation time
+        # 1  X
+        # 2  Y
+        # 3  Z
+        # 4  Qw
+        # 5  Qx
+        # 6  Qy
+        # 7  Qz
+        # 8  latitude
+        # 9  longitude
+        # 10 altitude
+        #
+        # 11 * 8 = 88 bytes
+        # ----------------------------------------------------
 
         packet = struct.pack(
-            "<7d",
+            "<11d",
+            sim_time,
             px,
             py,
             pz,
             qw,
             qx,
             qy,
-            qz
+            qz,
+            latitude,
+            longitude,
+            altitude
         )
 
-
-        # ====================================================
-        # Send UDP packet
-        # ====================================================
+        # ----------------------------------------------------
+        # Send to Unity
+        # ----------------------------------------------------
 
         try:
 
@@ -307,32 +614,27 @@ def main():
 
             break
 
-
-        # ====================================================
-        # Print status once per second
-        # ====================================================
+        # ----------------------------------------------------
+        # Status
+        # ----------------------------------------------------
 
         current_time = time.time()
 
-        if current_time - last_print_time >= 1.0:
+        if (
+            current_time -
+            last_print_time >= 1.0
+        ):
 
             print(
-                f"[bridge] Packets: {packet_count:6d} | "
-                f"Position: "
-                f"X={px:.3f} "
-                f"Y={py:.3f} "
-                f"Z={pz:.3f}"
-            )
-
-            print(
-                f"[bridge] Quaternion: "
-                f"W={qw:.6f} "
-                f"X={qx:.6f} "
-                f"Y={qy:.6f} "
-                f"Z={qz:.6f}"
+                f"[bridge] Packets: "
+                f"{packet_count:6d} | "
+                f"Lat={latitude:8.3f}° | "
+                f"Lon={longitude:9.3f}° | "
+                f"Alt={altitude / 1000.0:8.2f} km"
             )
 
             last_print_time = current_time
+
 
 if __name__ == "__main__":
     main()
