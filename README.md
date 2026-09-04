@@ -37,7 +37,7 @@ More information about JEOD can be found in the
 [JEOD repository](https://github.com/nasa/jeod).
 
 # Unity Engine
-To better visualize how the satellite orbits Earth, Trick data is passed to Unity and runs in real time as the simulation runs. The UI includes models of Earth, a 3D model of NASA GOES satellite, and a map with a trail showing where the satellite has traveled. This allows Trick to be tailored with different parameters to be able to show satellite orbit.
+To better visualize how the satellite orbits Earth, Trick data is passed to Unity and runs in real time as the simulation runs. The UI includes models of Earth, a 3D model of NASA GOES satellite, and a map with a trail showing where the satellite has traveled. This allows Trick to be tailored with different parameters to be able to show differences in satellite orbit.
 
 # Simulation Architecture
 This project combines NASA Trick, NASA JEOD, Python, and Unity into a single
