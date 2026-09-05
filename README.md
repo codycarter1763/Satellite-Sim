@@ -45,7 +45,7 @@ spacecraft simulation and visualization pipeline.
 
 ## Simulation Physics
 
-JEOD provides many physics models. Currently, the following are implemented in this spacecraft simulation to add real-word variables:
+JJEOD provides many physics models. Currently, the following are implemented in this spacecraft simulation to add real-world environmental and spacecraft dynamics:
 
 | Physics / Model | Description |
 |---|---|
@@ -58,25 +58,50 @@ JEOD provides many physics models. Currently, the following are implemented in t
 | **LVLH Reference Frame** | A reference frame follows the spacecraft for future GNC development. |
 
 # Testing
-In this repo, I included various tools to help visualize and plot simulation data, whether that be through Unity or log_state files. I'll show some important trends below as examples:
+
+In this repo, I included various tools to help visualize and plot simulation data, whether that be through Unity or `log_state` files. The plots below highlight several important trends from the simulation.
 
 ## Spacecraft Orbital Path
 
 <img width="1050" height="832" alt="image" src="https://github.com/user-attachments/assets/d8d59509-c529-4d6c-be4f-20824c654789" />
 
+The spacecraft follows an elliptical orbit around Earth. While a shallow one, it can be seen that one the left and right peaks of orbit are different altitudes.
+
 <img width="2106" height="511" alt="image" src="https://github.com/user-attachments/assets/205d7b1b-cfbf-4f22-87d9-3ed785969c2a" />
 
-## Altitude 
+## Altitude
+
 <img width="1817" height="512" alt="image" src="https://github.com/user-attachments/assets/fba6444f-96b1-4b5f-97c7-467d9bcafd71" />
 
+The spacecraft's altitude periodically increases and decreases as shown be the elliptical orbit. The repeating pattern corresponds to the spacecraft completing successive orbits around Earth over the course of 24 hours.
 
 ## Atmospheric Density vs. Altitude
+
 <img width="1380" height="508" alt="image" src="https://github.com/user-attachments/assets/e2cac0d8-9e30-407b-84d7-feb358d9147f" />
 
+Atmospheric density decreases rapidly with increasing altitude. As the spacecraft decreases altitude it encounters a denser atmosphere, while density decreases as it increases. The thick lines demonstrate that the orbit is slightly changing over time.
 
 ## Drag Force vs. Atmospheric Density
 
+To demonstrate the effect of spacecraft geometry on aerodynamic drag, two spacecraft configurations were simulated while maintaining the same 500 kg spacecraft mass. The second configuration has twice the linear dimensions and therefore four times the surface area of the original configuration.
+### 2m x 1.5m x 1m Rectangular Spacecraft
+<img width="1199" height="512" alt="image" src="https://github.com/user-attachments/assets/cd683bda-2c92-490d-99c0-fa645fdc00b2" />
+
+### 4m x 3m x 2m Rectangular Spacecraft
+<img width="655" height="519" alt="image" src="https://github.com/user-attachments/assets/8603da45-d1ec-4f05-853a-658800c50935" />
+
 ## Ground Track
 
+<img width="553" height="301" alt="image" src="https://github.com/user-attachments/assets/ee2019df-34f4-45d6-a51c-b80b04cc25ea" />
+
+The ground track shows the spacecraft's position relative to Earth's surface over time. 
 
 # Conclusion
+
+This project demonstrates a complete spacecraft simulation and visualization pipeline using NASA Trick, NASA JEOD, Python, and Unity.
+
+The simulation models translational and rotational spacecraft dynamics, non-spherical Earth gravity, atmospheric conditions, and aerodynamic drag. Simulation telemetry is processed through a Python bridge and visualized in Unity, allowing spacecraft motion and ground tracks to be observed in real time.
+
+The included analysis tools also provide a way to validate the simulation by examining orbital altitude, atmospheric density, aerodynamic drag, and ground-track behavior.
+
+Future work will focus on expanding the spacecraft's guidance, navigation, and control capabilities, more advanced simulations, or NASA NOS3 integration or some sort of flight computer system.
