@@ -82,7 +82,7 @@ The data path consists of two independent paths: a telemetry analysis path and a
 
 ## Simulation Physics
 
-JJEOD provides many physics models. Currently, the following are implemented in this spacecraft simulation to add real-world environmental and spacecraft dynamics:
+JEOD provides many physics models. Currently, the following are implemented in this spacecraft simulation to add real-world environmental and spacecraft dynamics:
 
 | Physics / Model | Description |
 |---|---|
@@ -110,7 +110,7 @@ The spacecraft follows an elliptical orbit around Earth. While a shallow one, it
 
 <img width="1817" height="512" alt="image" src="https://github.com/user-attachments/assets/fba6444f-96b1-4b5f-97c7-467d9bcafd71" />
 
-The spacecraft's altitude periodically increases and decreases as shown be the elliptical orbit. The repeating pattern corresponds to the spacecraft completing successive orbits around Earth over the course of 24 hours.
+The spacecraft's altitude periodically increases and decreases as shown by the elliptical orbit. The repeating pattern corresponds to the spacecraft completing successive orbits around Earth over the course of 24 hours.
 
 ## Atmospheric Density vs. Altitude
 
