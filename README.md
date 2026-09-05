@@ -2,6 +2,7 @@
 
 <img width="2559" height="1403" alt="Screenshot from 2026-09-04 00-03-39" src="https://github.com/user-attachments/assets/ba896282-6f78-4a18-9ed1-bc9809b483ba" />
 
+
 # About
 This repository builds on my NASA Trick simulation learning journey through a satellite dynamics simulation. 
 
