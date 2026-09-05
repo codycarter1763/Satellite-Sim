@@ -1,0 +1,25 @@
+|L   0|2026/09/05,01:53:39.678117|cody-GS65-Stealth-9SD| |T 0|18000.000000| 
+     REALTIME SHUTDOWN STATS:
+            ACTUAL INIT TIME:        2.777
+         ACTUAL ELAPSED TIME:        3.449
+|L   0|2026/09/05,01:53:40.996758|cody-GS65-Stealth-9SD| |T 0|18000.000000| 
+SIMULATION TERMINATED IN
+  PROCESS: 0
+  ROUTINE: Executive_loop_single_thread.cpp:98
+  DIAGNOSTIC: Reached termination time
+
+              SIMULATION START TIME:        0.000
+               SIMULATION STOP TIME:    18000.000
+            SIMULATION ELAPSED TIME:    18000.000
+                 USER CPU TIME USED:        3.661
+               SYSTEM CPU TIME USED:        0.122
+              SIMULATION / CPU TIME:     4758.718
+       INITIALIZATION USER CPU TIME:        2.718
+     INITIALIZATION SYSTEM CPU TIME:        0.065
+               SIMULATION RAM USAGE:      170.812MB
+      (External program RAM usage not included!)
+  VOLUNTARY CONTEXT SWITCHES (INIT):           22
+INVOLUNTARY CONTEXT SWITCHES (INIT):           16
+   VOLUNTARY CONTEXT SWITCHES (RUN):         8793
+ INVOLUNTARY CONTEXT SWITCHES (RUN):           10
+

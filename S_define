@@ -1,17 +1,197 @@
 //=============================================================================
-// Creates a basic simulation with 2 vehicles.
+// Single vehicle in Earth orbit with aerodynamic drag and LVLH reference frame
 //=============================================================================
 
-#define DYNAMICS 0.01
+#define DYNAMICS 1.0
+#define LOW_RATE_ENV 100.0
 
 #include "sim_objects/default_trick_sys.sm"
 #include "jeod_sys.sm"
 #include "default_priority_settings.sm"
-#include "time_dyntime_only.sm"
-#include "dynamics.sm"
-#include "earth_basic.sm"
-#include "environment_sans_de405.sm"
-#include "vehicle_basic.sm"
 
+#include "time_TAI_UTC_UT1_TT_GMST.sm"
+
+#include "dynamics.sm"
+#include "earth_GGM05C_MET_RNP.sm"
+#include "environment_sans_de405.sm"
+
+
+//=============================================================================
+// JEOD includes
+//=============================================================================
+
+// DynBody
+##include "dynamics/dyn_body/include/dyn_body.hh"
+
+// Body initialization
+##include "dynamics/body_action/include/dyn_body_init_trans_state.hh"
+##include "dynamics/body_action/include/dyn_body_init_rot_state.hh"
+##include "dynamics/body_action/include/dyn_body_init_orbit.hh"
+##include "dynamics/body_action/include/mass_body_init.hh"
+
+// Gravity
+##include "environment/gravity/include/spherical_harmonics_gravity_controls.hh"
+
+// Atmosphere
+##include "environment/atmosphere/base_atmos/include/atmosphere.hh"
+##include "environment/atmosphere/MET/include/MET_atmosphere.hh"
+##include "environment/atmosphere/base_atmos/include/wind_velocity.hh"
+
+// Derived state
+##include "dynamics/derived_state/include/planetary_derived_state.hh"
+
+// LVLH
+##include "utils/lvlh_frame/include/lvlh_frame.hh"
+
+// Aerodynamics
+##include "utils/surface_model/include/flat_plate.hh"
+##include "utils/surface_model/include/surface_model.hh"
+
+##include "interactions/aerodynamics/include/aero_drag.hh"
+##include "interactions/aerodynamics/include/aero_surface.hh"
+##include "interactions/aerodynamics/include/aero_surface_factory.hh"
+##include "interactions/aerodynamics/include/flat_plate_aero_params.hh"
+
+
+//=============================================================================
+// Vehicle
+//
+// Explicitly initializes the DynBody and LVLH frame following the same
+// general initialization pattern used by JEOD Exercise 36.
+//
+//=============================================================================
+
+class VehicleWithLvlhSimObject : public Trick::SimObject
+{
+public:
+    jeod::DynBody dyn_body;
+    jeod::SphericalHarmonicsGravityControls grav_control;
+
+    jeod::DynBodyInitOrbit orb_init;
+    jeod::DynBodyInitRotState rot_init;
+    jeod::DynBodyInitTransState trans_init;
+    jeod::MassBodyInit mass_init;
+
+    jeod::LvlhFrame lvlh_frame;
+    jeod::AtmosphereState atmos_state;
+    jeod::PlanetaryDerivedState pfix;
+
+    VehicleWithLvlhSimObject(
+        jeod::DynManager & dyn_manager,
+        jeod::METAtmosphere & atmos,
+        jeod::WindVelocity & wind)
+        : dyn_manager_ref(dyn_manager),
+          atmos_ref(atmos),
+          wind_ref(wind)
+    {
+        P_ENV("initialization")
+            dyn_body.initialize_model(dyn_manager_ref);
+
+        lvlh_frame.set_subject_name("vehicle.composite_body");
+        lvlh_frame.set_planet_name("Earth");
+
+        P_ENV("initialization")
+            lvlh_frame.initialize(dyn_manager_ref);
+
+        P_BODY("initialization")
+            pfix.initialize(dyn_body, dyn_manager_ref);
+
+        P_BODY("initialization")
+            pfix.update();
+
+        P_DYN("initialization")
+            atmos_state.update_state(&atmos_ref, &pfix.state);
+
+        P_DYN("initialization")
+            atmos_state.update_wind(
+                &wind_ref,
+                dyn_body.composite_body.state.trans.position,
+                pfix.state.ellip_coords.altitude);
+
+        (DYNAMICS, "environment")
+            pfix.update();
+
+        (DYNAMICS, "environment")
+            atmos_state.update_state(&atmos_ref, &pfix.state);
+
+        (DYNAMICS, "environment")
+            atmos_state.update_wind(
+                &wind_ref,
+                dyn_body.composite_body.state.trans.position,
+                pfix.state.ellip_coords.altitude);
+
+        (DYNAMICS, "environment")
+            lvlh_frame.update();
+    }
+
+    VehicleWithLvlhSimObject(const VehicleWithLvlhSimObject &) = delete;
+    VehicleWithLvlhSimObject & operator=(const VehicleWithLvlhSimObject &) = delete;
+
+private:
+    jeod::DynManager & dyn_manager_ref;
+    jeod::METAtmosphere & atmos_ref;
+    jeod::WindVelocity & wind_ref;
+};
+
+VehicleWithLvlhSimObject vehicle(
+    dynamics.dyn_manager,
+    earth.atmos,
+    earth.wind_velocity);
+
+
+//=============================================================================
+// Aerodynamic interaction
+//=============================================================================
+
+class InteractionSimObject : public Trick::SimObject
+{
+public:
+    jeod::SurfaceModel surface;
+    jeod::AerodynamicDrag aero_drag;
+    jeod::AeroSurface aero_surface;
+    jeod::AeroSurfaceFactory aero_surface_factory;
+
+    InteractionSimObject(VehicleWithLvlhSimObject & veh_in)
+        : vehicle_ref(veh_in)
+    {
+        P_BODY("initialization")
+            aero_surface_factory.create_surface(
+                &surface,
+                &aero_surface);
+
+        (DYNAMICS, "scheduled")
+            aero_drag.aero_drag(
+                vehicle_ref.dyn_body.composite_body.state.trans.velocity,
+                &vehicle_ref.atmos_state,
+                vehicle_ref.dyn_body.structure.state.rot.T_parent_this,
+                vehicle_ref.dyn_body.mass.composite_properties.mass,
+                vehicle_ref.dyn_body.mass.composite_properties.position);
+    }
+
+private:
+    InteractionSimObject(const InteractionSimObject &) = delete;
+    InteractionSimObject & operator=(const InteractionSimObject &) = delete;
+    VehicleWithLvlhSimObject & vehicle_ref;
+};
+
+InteractionSimObject interactions(vehicle);
+
+
+//=============================================================================
+// Collect aerodynamic force and torque
+//=============================================================================
+
+vcollect vehicle.dyn_body.collect.collect_environ_forc
+    jeod::CollectForce::create{
+        interactions.aero_drag.aero_force};
+
+vcollect vehicle.dyn_body.collect.collect_environ_torq
+    jeod::CollectTorque::create{
+        interactions.aero_drag.aero_torque};
+
+
+//=============================================================================
 // Integration
-IntegLoop sim_integ_loop(DYNAMICS) dynamics;
+//=============================================================================
+
+IntegLoop sim_integ_loop(DYNAMICS) dynamics, earth;
