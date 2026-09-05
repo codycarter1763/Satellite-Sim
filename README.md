@@ -67,6 +67,7 @@ Run either one with
 or
 
 ./launch_sim_200x200.sh
+```
 
 # Simulation Architecture
 This project combines NASA Trick, NASA JEOD, Python, and Unity into a single
