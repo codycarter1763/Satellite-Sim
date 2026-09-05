@@ -94,7 +94,7 @@ JEOD provides many physics models. Currently, the following are implemented in t
 | **Aerodynamic Drag** | Atmospheric drag is calculated using a rectangular spacecraft. |
 | **LVLH Reference Frame** | A reference frame follows the spacecraft for future GNC development. |
 
-# Testing
+# Simulation Results
 
 In this repo, I included various tools to help visualize and plot simulation data, whether that be through Unity or `log_state` files. The plots below highlight several important trends from the simulation.
 
