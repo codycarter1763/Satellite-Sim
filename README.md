@@ -42,8 +42,8 @@ To better visualize how the satellite orbits Earth, Trick data is passed to Unit
 ## Prerequisites
 
 This simulation requires:
-- NASA Trick (Reference [this](https://nasa.github.io/trick/documentation/install_guide/Install-Guide) for installation steps.
-- NASA JEOD (Reference [repo]( https://github.com/nasa/jeod/tree/main) to clone to home directory.
+- NASA Trick (Reference [this](https://nasa.github.io/trick/documentation/install_guide/Install-Guide) for installation steps.)
+- NASA JEOD (Reference [repo]( https://github.com/nasa/jeod/tree/main) to clone to home directory.)
 - Python dependencies in requirements.txt
 
 ## Visualization
