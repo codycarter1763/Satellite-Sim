@@ -23,14 +23,12 @@ de4xx_lib/
 # ============================================================
 
 # Unity generated/cache data
-Library/
-Temp/
-Obj/
-Build/
-Builds/
-Logs/
-MemoryCaptures/
-Recordings/
+Unity_Orbit/Library/
+Unity_Orbit/Temp/
+Unity_Orbit/Obj/
+Unity_Orbit/Build/
+Unity_Orbit/Builds/
+Unity_Orbit/Logs/
 
 # Unity generated project files
 *.csproj
