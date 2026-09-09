@@ -12,6 +12,9 @@ public class TrickReceiver : MonoBehaviour
     [Header("Object")]
     [SerializeField] private Transform vehicle;
 
+    [Header("Earth")]
+    [SerializeField] private EarthRotation earthRotation;
+
     [Header("Ground Track")]
     [SerializeField] private GroundTrack groundTrack;
 
@@ -39,6 +42,8 @@ public class TrickReceiver : MonoBehaviour
 
     private Vector3 vehiclePosition;
     private Quaternion vehicleRotation;
+
+    private double simulationTime;
 
     private double latitude;
     private double longitude;
@@ -188,6 +193,8 @@ public class TrickReceiver : MonoBehaviour
 
                 lock (stateLock)
                 {
+                    simulationTime = simTime;
+
                     vehiclePosition = newPosition;
                     vehicleRotation = newRotation;
 
@@ -218,6 +225,7 @@ public class TrickReceiver : MonoBehaviour
         Vector3 pos;
         Quaternion rot;
 
+        double simTime;
         double lat;
         double lon;
         double alt;
@@ -227,12 +235,23 @@ public class TrickReceiver : MonoBehaviour
             if (!hasData)
                 return;
 
+            simTime = simulationTime;
+
             pos = vehiclePosition;
             rot = vehicleRotation;
 
             lat = latitude;
             lon = longitude;
             alt = altitude;
+        }
+
+        // =========================================================
+        // Update Earth rotation
+        // =========================================================
+
+        if (earthRotation != null)
+        {
+            earthRotation.SetSimulationTime(simTime);
         }
 
         // =========================================================

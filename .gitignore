@@ -7,15 +7,9 @@ build/
 S_source.*
 S_sie.*
 de4xx_lib/
+.csv
 
-# Unity generated folders
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]ser[Ss]ettings/
+
 
 # Unity generated metadata/cache
 MemoryCaptures/

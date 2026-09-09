@@ -202,8 +202,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 132870, guid: 27fe6d2a15a377f4587f716a2d37ca8a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1566238648}
   m_SourcePrefab: {fileID: 100100000, guid: 27fe6d2a15a377f4587f716a2d37ca8a, type: 3}
+--- !u!1 &146927874 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 132870, guid: 27fe6d2a15a377f4587f716a2d37ca8a, type: 3}
+  m_PrefabInstance: {fileID: 146927873}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &837438360
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   port: 5005
   vehicle: {fileID: 1085743482}
+  earthRotation: {fileID: 1566238648}
   groundTrack: {fileID: 1915681829}
   metersToUnity: 0.000001
   swapYZ: 0
@@ -899,6 +908,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 426654, guid: 27fe6d2a15a377f4587f716a2d37ca8a, type: 3}
   m_PrefabInstance: {fileID: 146927873}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1566238648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146927874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01dc743aca51148908222ca8ec215944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EarthRotation
+  simulationTime: 0
+  initialRotation: 0
 --- !u!1 &1685414539
 GameObject:
   m_ObjectHideFlags: 0
