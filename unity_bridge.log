@@ -1,31 +1,18 @@
-[bridge] Telemetry output: telemetry.csv
-[bridge] Connected to Trick variable server on localhost:40725
-[bridge] UDP output: 127.0.0.1:5005
-[bridge] Subscribing to variables...
-[bridge]   time
-[bridge]   vehicle.dyn_body.composite_body.state.trans.position[0]
-[bridge]   vehicle.dyn_body.composite_body.state.trans.position[1]
-[bridge]   vehicle.dyn_body.composite_body.state.trans.position[2]
-[bridge]   vehicle.dyn_body.composite_body.state.trans.velocity[0]
-[bridge]   vehicle.dyn_body.composite_body.state.trans.velocity[1]
-[bridge]   vehicle.dyn_body.composite_body.state.trans.velocity[2]
-[bridge]   vehicle.dyn_body.composite_body.state.rot.Q_parent_this.scalar
-[bridge]   vehicle.dyn_body.composite_body.state.rot.Q_parent_this.vector[0]
-[bridge]   vehicle.dyn_body.composite_body.state.rot.Q_parent_this.vector[1]
-[bridge]   vehicle.dyn_body.composite_body.state.rot.Q_parent_this.vector[2]
-[bridge]   interactions.aero_drag.aero_force[0]
-[bridge]   interactions.aero_drag.aero_force[1]
-[bridge]   interactions.aero_drag.aero_force[2]
-[bridge]   vehicle.atmos_state.density
-[bridge]   vehicle.atmos_state.pressure
-[bridge]   vehicle.atmos_state.temperature
-[bridge] Waiting for Trick data...
-
-==========================================
-[bridge] First raw Trick message:
-0	0 {s}	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
-==========================================
-
-Trick variable server closed connection
-[bridge] Closing telemetry file...
-[bridge] Bridge stopped.
+Connected to Trick at localhost:42501
+Sending Unity data to 127.0.0.1:5005
+Packets=10 Time=217.0s Alt=1025.99km Speed=7.282km/s
+Packets=20 Time=499.0s Alt=1013.41km Speed=7.293km/s
+Packets=30 Time=737.0s Alt=995.81km Speed=7.310km/s
+Packets=40 Time=993.0s Alt=971.03km Speed=7.333km/s
+Packets=50 Time=1265.0s Alt=939.76km Speed=7.364km/s
+Packets=60 Time=1481.0s Alt=912.81km Speed=7.391km/s
+Packets=70 Time=1736.0s Alt=880.69km Speed=7.423km/s
+Packets=80 Time=1966.0s Alt=852.95km Speed=7.453km/s
+Traceback (most recent call last):
+  File "/home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py", line 215, in <module>
+    main()
+  File "/home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py", line 165, in main
+    line, buffer = receive_line(trick, buffer)
+  File "/home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py", line 123, in receive_line
+    raise ConnectionError("Trick closed the connection.")
+ConnectionError: Trick closed the connection.
