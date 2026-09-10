@@ -300,8 +300,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "UnityEditor.MainToolbarWindow\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1920
-    y: 62
+    x: 0
+    y: 0
     width: 2560
     height: 36
   m_SerializedDataModeController:
@@ -568,8 +568,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1920
-    y: 1095
+    x: 0
+    y: 1021
     width: 1913
     height: 299
   m_SerializedDataModeController:
@@ -621,7 +621,6 @@ MonoBehaviour:
     m_LastClickedID:
       m_rawData: 568105584918841714
     m_ExpandedIDs:
-    - m_rawData: 568105589213755516
     - m_rawData: 0
     - m_rawData: 568105584918841714
     m_RenameOverlay:
@@ -741,8 +740,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 3834
-    y: 98
+    x: 1915
+    y: 24
     width: 645
     height: 1296
   m_SerializedDataModeController:
@@ -795,8 +794,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1920
-    y: 98
+    x: 0
+    y: 24
     width: 468
     height: 971
   m_SerializedDataModeController:
@@ -872,8 +871,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 2389
-    y: 98
+    x: 470
+    y: 24
     width: 1443
     height: 971
   m_SerializedDataModeController:

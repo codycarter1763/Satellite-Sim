@@ -23,16 +23,16 @@ VEHICLE = "vehicle"
 
 VARS = [
     "time",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[0]",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[1]",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[2]",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[0]",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[1]",
-    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[2]",
-    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.scalar",
-    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[0]",
-    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[1]",
-    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[2]",
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[0]",           # ECI X position
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[1]",           # ECI Y position
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.position[2]",           # ECI Z position
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[0]",           # ECI X velocity
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[1]",           # ECI Y velocity
+    f"{VEHICLE}.dyn_body.composite_body.state.trans.velocity[2]",           # ECI Z velocity
+    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.scalar",    # Quaternion scalar
+    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[0]", # Quaternion vector X
+    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[1]", # Quaternion vector Y
+    f"{VEHICLE}.dyn_body.composite_body.state.rot.Q_parent_this.vector[2]", # Quaternion vector Z
 ]
 
 

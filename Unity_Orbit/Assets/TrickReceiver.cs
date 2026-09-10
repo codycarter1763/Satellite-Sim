@@ -36,6 +36,9 @@ public class TrickReceiver : MonoBehaviour
     double altitude;
     bool hasData;
 
+    /**
+    * Start the UDP listener thread.
+    */
     void Start()
     {
         try
@@ -55,6 +58,9 @@ public class TrickReceiver : MonoBehaviour
         }
     }
 
+    /**
+    * Receive data from the UDP socket.
+    */
     void ReceiveData()
     {
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
@@ -125,6 +131,9 @@ public class TrickReceiver : MonoBehaviour
         }
     }
 
+    /**
+    * Update the vehicle's position and rotation.
+    */
     void Update()
     {
         lock (stateLock)
@@ -162,6 +171,9 @@ public class TrickReceiver : MonoBehaviour
         }
     }
 
+    /**
+     * Called when the application quits.
+     */
     void OnApplicationQuit()
     {
         running = false;

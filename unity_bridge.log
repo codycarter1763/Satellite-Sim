@@ -1,13 +1,23 @@
-Connected to Trick at localhost:42501
+Connected to Trick at localhost:43063
 Sending Unity data to 127.0.0.1:5005
-Packets=10 Time=217.0s Alt=1025.99km Speed=7.282km/s
-Packets=20 Time=499.0s Alt=1013.41km Speed=7.293km/s
-Packets=30 Time=737.0s Alt=995.81km Speed=7.310km/s
-Packets=40 Time=993.0s Alt=971.03km Speed=7.333km/s
-Packets=50 Time=1265.0s Alt=939.76km Speed=7.364km/s
-Packets=60 Time=1481.0s Alt=912.81km Speed=7.391km/s
-Packets=70 Time=1736.0s Alt=880.69km Speed=7.423km/s
-Packets=80 Time=1966.0s Alt=852.95km Speed=7.453km/s
+Packets=10 Time=354.0s Alt=1021.06km Speed=7.286km/s
+Packets=20 Time=802.0s Alt=990.07km Speed=7.315km/s
+Packets=30 Time=1249.0s Alt=941.70km Speed=7.362km/s
+Packets=40 Time=1622.0s Alt=894.95km Speed=7.409km/s
+Packets=50 Time=1964.0s Alt=853.13km Speed=7.452km/s
+Packets=60 Time=2340.0s Alt=814.42km Speed=7.494km/s
+Packets=70 Time=2736.0s Alt=787.86km Speed=7.524km/s
+Packets=80 Time=3057.0s Alt=780.00km Speed=7.532km/s
+Packets=90 Time=3386.0s Alt=785.65km Speed=7.526km/s
+Packets=100 Time=3706.0s Alt=803.87km Speed=7.506km/s
+Packets=110 Time=4020.0s Alt=832.07km Speed=7.475km/s
+Packets=120 Time=4331.0s Alt=867.19km Speed=7.438km/s
+Packets=130 Time=4645.0s Alt=906.55km Speed=7.397km/s
+Packets=140 Time=4952.0s Alt=944.64km Speed=7.359km/s
+Packets=150 Time=5263.0s Alt=979.27km Speed=7.326km/s
+Packets=160 Time=5578.0s Alt=1006.79km Speed=7.300km/s
+Packets=170 Time=5929.0s Alt=1025.05km Speed=7.283km/s
+Packets=180 Time=6360.0s Alt=1026.73km Speed=7.281km/s
 Traceback (most recent call last):
   File "/home/cody/NASA-Trick-Spacecraft-Docking-Simulation/trick_unity_bridge.py", line 215, in <module>
     main()
